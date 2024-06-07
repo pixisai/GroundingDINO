@@ -211,6 +211,20 @@ class Model:
             box_threshold=box_threshold,
             text_threshold=text_threshold,
             device=self.device)
+
+        new_boxes, new_logits, new_phrases = [], [], []
+        for b, l, p in zip(boxes, logits, phrases):
+            if p:
+                new_boxes.append(b)
+                new_logits.append(l)
+                new_phrases.append(p)
+
+        new_boxes = torch.from_numpy(np.array(new_boxes))
+        new_logits = torch.from_numpy(np.array(new_logits))
+        boxes = new_boxes
+        logits = new_logits
+        phrases = new_phrases
+        
         source_h, source_w, _ = image.shape
         detections = Model.post_process_result(
             source_h=source_h,
